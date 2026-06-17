@@ -1,15 +1,19 @@
 function calcMPROI(DLI, Y_max, k, T, P_crop, PPE, alpha, C_elec) {
   const numerator = 3.6 * PPE * Y_max * (1 - Math.exp(-k * DLI)) * P_crop;
-  const denominator = alpha * T * C_elec;
+  const denominator = DLI * alpha * T * C_elec;
   return numerator / denominator;
 }
 
 function calcDLIOptimal(Y_max, k, T, P_crop, PPE, alpha, C_elec) {
-  const ratio = (alpha * T * C_elec) / (3.6 * PPE * Y_max * P_crop);
-  if (ratio >= 1) return null;
-  const arg = 1 - ratio;
-  if (arg <= 0) return null;
-  return -(1 / k) * Math.log(arg);
+  const target = (alpha * T * C_elec) / (3.6 * PPE * Y_max * P_crop);
+  if (target >= k) return null;
+  let lo = 0.001, hi = 500;
+  for (let i = 0; i < 60; i++) {
+    const mid = (lo + hi) / 2;
+    if ((1 - Math.exp(-k * mid)) / mid > target) lo = mid;
+    else hi = mid;
+  }
+  return (lo + hi) / 2;
 }
 
 function calcYield(DLI, Y_max, k) {

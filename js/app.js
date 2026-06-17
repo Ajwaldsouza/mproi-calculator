@@ -61,20 +61,31 @@ function updateSummary(index, params, curves) {
   let optText, gapText;
 
   if (dliOpt === null || dliOpt < DLI_MIN) {
-    optText = `<span class="value-positive">Below practical range</span>`;
-    gapText = `<p class="gap-positive">MPROI exceeds 1.0 across the entire practical DLI range. All light is profitable at these economics.</p>`;
+    optText = `<span class="value-negative">Below practical range</span>`;
+    gapText = `<p class="gap-warning">MPROI is below 1.0 across the entire practical DLI range. Lighting costs exceed returns at these economics.</p>`;
   } else if (!dliOptInRange) {
-    optText = `<span class="value-negative">&gt; ${DLI_MAX}</span>`;
-    gapText = `<p class="gap-warning">Breakeven DLI exceeds the practical range. Lighting costs exceed returns at these economics.</p>`;
+    optText = `<span class="value-positive">&gt; ${DLI_MAX}</span>`;
+    gapText = `<p class="gap-positive">All light in the practical range is profitable at these economics.</p>`;
   } else {
     optText = `<strong>${dliOpt.toFixed(1)}</strong> mol/m²/d`;
     const gap = params.currentDLI - dliOpt;
-    if (gap < -0.5) {
-      gapText = `<p class="gap-warning">Operating <strong>${Math.abs(gap).toFixed(1)} mol below</strong> breakeven. Energy costs exceed returns at this DLI.</p>`;
-    } else if (gap > 0.5) {
-      gapText = `<p class="gap-positive">Operating <strong>${gap.toFixed(1)} mol above</strong> breakeven. Light investment is profitable.</p>`;
+    if (gap > 0.5) {
+      const profitAtOpt = calcProfitPerDay(
+        dliOpt,
+        params.Y_max,
+        params.k,
+        params.T,
+        params.P_crop,
+        params.PPE,
+        params.alpha,
+        params.C_elec
+      );
+      const annualImpact = (profitAtOpt - profitAtCurrent) * 365;
+      gapText = `<p class="gap-warning">Operating <strong>${gap.toFixed(1)} mol above</strong> optimal. Estimated margin loss: <strong>$${annualImpact.toFixed(2)}/m²/year</strong></p>`;
+    } else if (gap < -0.5) {
+      gapText = `<p class="gap-positive">Operating <strong>${Math.abs(gap).toFixed(1)} mol below</strong> optimal. Room to add light profitably.</p>`;
     } else {
-      gapText = `<p class="gap-neutral">Operating near the breakeven DLI.</p>`;
+      gapText = `<p class="gap-neutral">Operating near the optimal DLI.</p>`;
     }
   }
 
