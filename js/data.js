@@ -1,0 +1,39 @@
+const CROPS = {
+  lettuce: {
+    name: "Butterhead Lettuce",
+    Y_max: 11060,
+    k: 0.0436,
+    T: 21,
+    P_crop: 5.00,
+    color: "#2a7f62",
+    colorLight: "rgba(42, 127, 98, 0.12)",
+  },
+  basil: {
+    name: "Basil",
+    Y_max: 12500,
+    k: 0.0117,
+    T: 21,
+    P_crop: 18.00,
+    color: "#7b5ea7",
+    colorLight: "rgba(123, 94, 167, 0.12)",
+  },
+  strawberry: {
+    name: "Strawberry",
+    Y_max: 58370,
+    k: 0.005,
+    T: 125,
+    P_crop: 8.00,
+    color: "#c45c3c",
+    colorLight: "rgba(196, 92, 60, 0.12)",
+  },
+};
+
+const LOCATIONS = {
+  netherlands: { name: "Netherlands", C_elec: 0.180, alpha: 1.933 },
+  sweden: { name: "Sweden", C_elec: 0.120, alpha: 1.950 },
+  uae: { name: "UAE", C_elec: 0.110, alpha: 1.864 },
+};
+
+const DLI_MIN = 4;
+const DLI_MAX = 24;
+const DLI_PLOT_STEPS = 200;

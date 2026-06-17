@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MPROI Calculator — Photon Economics</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <h1>Marginal Photon ROI Calculator</h1>
+    <p class="subtitle">Find the DLI where the last unit of light stops paying for itself</p>
+    <div class="formula-ref">
+      MPROI&nbsp;=&nbsp;(3.6 &times; PPE &times; Y<sub>max</sub> &times; k &times; e<sup>&minus;k&middot;DLI</sup> &times; P<sub>crop</sub>)&nbsp;/&nbsp;(1000 &times; &alpha; &times; T &times; C<sub>elec</sub>)
+    </div>
+  </header>
+
+  <main class="scenarios-grid">
+
+    <!-- ── Scenario A ──────────────────── -->
+    <div class="scenario-card" data-index="0">
+      <div class="card-header"><h2>Scenario A</h2></div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label for="loc-0">Location</label>
+          <select class="location-select" id="loc-0">
+            <option value="netherlands" selected>Netherlands — $0.180/kWh</option>
+            <option value="sweden">Sweden — $0.120/kWh</option>
+            <option value="uae">UAE — $0.110/kWh</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="crop-0">Crop</label>
+          <select class="crop-select" id="crop-0">
+            <option value="lettuce" selected>Butterhead Lettuce</option>
+            <option value="basil">Basil</option>
+            <option value="strawberry">Strawberry</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>LED Efficacy (PPE)</label>
+          <div class="slider-row">
+            <input type="range" class="ppe-slider" min="1.8" max="3.2" step="0.1" value="2.5">
+            <span class="slider-display ppe-value">2.5 &micro;mol/J</span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Selling Price</label>
+          <div class="price-row">
+            <span class="price-prefix">$</span>
+            <input type="number" class="price-input" step="0.50" min="0.5" max="100" value="5.00">
+            <span class="price-suffix">/ kg</span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Current Operating DLI</label>
+          <div class="slider-row">
+            <input type="range" class="dli-slider" min="4" max="24" step="0.5" value="16">
+            <span class="slider-display dli-value">16.0 mol/m&sup2;/d</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-legend">
+        <span class="legend-item"><span class="legend-line solid"></span>MPROI</span>
+        <span class="legend-item"><span class="legend-line dashed"></span>Profit/m&sup2;/d</span>
+      </div>
+      <div class="chart-container">
+        <canvas class="mproi-chart"></canvas>
+      </div>
+
+      <div class="results-panel"></div>
+    </div>
+
+    <!-- ── Scenario B ──────────────────── -->
+    <div class="scenario-card" data-index="1">
+      <div class="card-header"><h2>Scenario B</h2></div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label for="loc-1">Location</label>
+          <select class="location-select" id="loc-1">
+            <option value="netherlands">Netherlands — $0.180/kWh</option>
+            <option value="sweden" selected>Sweden — $0.120/kWh</option>
+            <option value="uae">UAE — $0.110/kWh</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="crop-1">Crop</label>
+          <select class="crop-select" id="crop-1">
+            <option value="lettuce" selected>Butterhead Lettuce</option>
+            <option value="basil">Basil</option>
+            <option value="strawberry">Strawberry</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>LED Efficacy (PPE)</label>
+          <div class="slider-row">
+            <input type="range" class="ppe-slider" min="1.8" max="3.2" step="0.1" value="2.5">
+            <span class="slider-display ppe-value">2.5 &micro;mol/J</span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Selling Price</label>
+          <div class="price-row">
+            <span class="price-prefix">$</span>
+            <input type="number" class="price-input" step="0.50" min="0.5" max="100" value="5.00">
+            <span class="price-suffix">/ kg</span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Current Operating DLI</label>
+          <div class="slider-row">
+            <input type="range" class="dli-slider" min="4" max="24" step="0.5" value="16">
+            <span class="slider-display dli-value">16.0 mol/m&sup2;/d</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-legend">
+        <span class="legend-item"><span class="legend-line solid"></span>MPROI</span>
+        <span class="legend-item"><span class="legend-line dashed"></span>Profit/m&sup2;/d</span>
+      </div>
+      <div class="chart-container">
+        <canvas class="mproi-chart"></canvas>
+      </div>
+
+      <div class="results-panel"></div>
+    </div>
+
+    <!-- ── Scenario C ──────────────────── -->
+    <div class="scenario-card" data-index="2">
+      <div class="card-header"><h2>Scenario C</h2></div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label for="loc-2">Location</label>
+          <select class="location-select" id="loc-2">
+            <option value="netherlands">Netherlands — $0.180/kWh</option>
+            <option value="sweden">Sweden — $0.120/kWh</option>
+            <option value="uae" selected>UAE — $0.110/kWh</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="crop-2">Crop</label>
+          <select class="crop-select" id="crop-2">
+            <option value="lettuce" selected>Butterhead Lettuce</option>
+            <option value="basil">Basil</option>
+            <option value="strawberry">Strawberry</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>LED Efficacy (PPE)</label>
+          <div class="slider-row">
+            <input type="range" class="ppe-slider" min="1.8" max="3.2" step="0.1" value="2.5">
+            <span class="slider-display ppe-value">2.5 &micro;mol/J</span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Selling Price</label>
+          <div class="price-row">
+            <span class="price-prefix">$</span>
+            <input type="number" class="price-input" step="0.50" min="0.5" max="100" value="5.00">
+            <span class="price-suffix">/ kg</span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Current Operating DLI</label>
+          <div class="slider-row">
+            <input type="range" class="dli-slider" min="4" max="24" step="0.5" value="16">
+            <span class="slider-display dli-value">16.0 mol/m&sup2;/d</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-legend">
+        <span class="legend-item"><span class="legend-line solid"></span>MPROI</span>
+        <span class="legend-item"><span class="legend-line dashed"></span>Profit/m&sup2;/d</span>
+      </div>
+      <div class="chart-container">
+        <canvas class="mproi-chart"></canvas>
+      </div>
+
+      <div class="results-panel"></div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <button class="methodology-toggle" onclick="this.nextElementSibling.classList.toggle('open')">
+      Methodology &amp; assumptions
+    </button>
+    <div class="methodology-content">
+      <p><strong>Yield model:</strong> Y(DLI) = Y<sub>max</sub> &times; (1 &minus; e<sup>&minus;k&middot;DLI</sup>). Parameters fitted from published yield-DLI data (Pennisi et al., 2020) using nonlinear least squares.</p>
+      <p><strong>Energy model:</strong> Total energy per mol DLI = lighting + HVAC cooling. HVAC multiplier (&alpha;) calculated as 1 + (1 &minus; &eta;<sub>LED</sub>) / COP, using COP values from Graamans et al. (2018) for each climate zone.</p>
+      <p><strong>Profit:</strong> Revenue (yield &times; selling price) minus energy cost (lighting + cooling) per crop cycle, expressed per m&sup2; per day. Variable costs (seeds, nutrients, labour) are excluded — the metric isolates the light&ndash;energy decision.</p>
+      <p><strong>Limitations:</strong> Does not model cycle-time effects on annual throughput, time-of-use electricity tariffs, CO&sub2; supplementation interactions, or tip-burn / quality losses at high DLI.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/mproi.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
