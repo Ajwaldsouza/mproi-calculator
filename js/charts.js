@@ -182,8 +182,8 @@ function updateChart(chart, curves, cropColor, currentDLI) {
 
     annotations.destructionZone = {
       type: "box",
-      xMin: dliOpt,
-      xMax: DLI_MAX,
+      xMin: DLI_MIN,
+      xMax: dliOpt,
       yScaleID: "yMPROI",
       backgroundColor: "rgba(196, 92, 60, 0.04)",
       borderWidth: 0,
