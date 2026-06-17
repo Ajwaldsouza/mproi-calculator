@@ -1,7 +1,7 @@
 const CROPS = {
   lettuce: {
     name: "Butterhead Lettuce",
-    Y_max: 11060,
+    Y_max: 11.06,
     k: 0.0436,
     T: 21,
     P_crop: 5.00,
@@ -10,7 +10,7 @@ const CROPS = {
   },
   basil: {
     name: "Basil",
-    Y_max: 12500,
+    Y_max: 12.50,
     k: 0.0117,
     T: 21,
     P_crop: 18.00,
@@ -19,7 +19,7 @@ const CROPS = {
   },
   strawberry: {
     name: "Strawberry",
-    Y_max: 58370,
+    Y_max: 58.37,
     k: 0.005,
     T: 125,
     P_crop: 8.00,

@@ -1,12 +1,12 @@
 function calcMPROI(DLI, Y_max, k, T, P_crop, PPE, alpha, C_elec) {
   const numerator = 3.6 * PPE * Y_max * k * Math.exp(-k * DLI) * P_crop;
-  const denominator = 1000 * alpha * T * C_elec;
+  const denominator = alpha * T * C_elec;
   return numerator / denominator;
 }
 
 function calcDLIOptimal(Y_max, k, T, P_crop, PPE, alpha, C_elec) {
   const arg =
-    (1000 * alpha * T * C_elec) / (3.6 * PPE * Y_max * k * P_crop);
+    (alpha * T * C_elec) / (3.6 * PPE * Y_max * k * P_crop);
   if (arg <= 0) return null;
   return -(1 / k) * Math.log(arg);
 }
@@ -16,7 +16,7 @@ function calcYield(DLI, Y_max, k) {
 }
 
 function calcProfitPerDay(DLI, Y_max, k, T, P_crop, PPE, alpha, C_elec) {
-  const revenuePerCycle = (calcYield(DLI, Y_max, k) * P_crop) / 1000;
+  const revenuePerCycle = calcYield(DLI, Y_max, k) * P_crop;
   const energyCostPerCycle =
     (DLI * alpha * T) / (3.6 * PPE) * C_elec;
   return (revenuePerCycle - energyCostPerCycle) / T;
