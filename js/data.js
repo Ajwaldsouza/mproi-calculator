@@ -29,9 +29,9 @@ const CROPS = {
 };
 
 const LOCATIONS = {
-  netherlands: { name: "Netherlands", C_elec: 0.180, alpha: 1.933 },
+  netherlands: { name: "Netherlands", C_elec: 0.200, alpha: 1.933 },
   sweden: { name: "Sweden", C_elec: 0.120, alpha: 1.950 },
-  uae: { name: "UAE", C_elec: 0.110, alpha: 1.864 },
+  uae: { name: "UAE", C_elec: 0.080, alpha: 1.864 },
 };
 
 const DLI_MIN = 4;
