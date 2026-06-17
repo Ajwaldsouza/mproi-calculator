@@ -419,14 +419,27 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .legend-line.dashed {
+  height: 1.5px;
+}
+
+.legend-line.dashed.revenue {
   background: repeating-linear-gradient(
     90deg,
-    #999 0,
-    #999 4px,
+    #3a8a5c 0,
+    #3a8a5c 4px,
     transparent 4px,
     transparent 7px
   );
-  height: 1.5px;
+}
+
+.legend-line.dashed.cost {
+  background: repeating-linear-gradient(
+    90deg,
+    #b85450 0,
+    #b85450 4px,
+    transparent 4px,
+    transparent 7px
+  );
 }
 
 /* ── Footer ──────────────────────────── */

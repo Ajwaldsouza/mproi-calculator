@@ -20,17 +20,23 @@ function calcYield(DLI, Y_max, k) {
   return Y_max * (1 - Math.exp(-k * DLI));
 }
 
+function calcRevenue(DLI, Y_max, k, P_crop) {
+  return calcYield(DLI, Y_max, k) * P_crop;
+}
+
+function calcEnergyCost(DLI, T, PPE, alpha, C_elec) {
+  return (DLI * alpha * T) / (3.6 * PPE) * C_elec;
+}
+
 function calcProfitPerDay(DLI, Y_max, k, T, P_crop, PPE, alpha, C_elec) {
-  const revenuePerCycle = calcYield(DLI, Y_max, k) * P_crop;
-  const energyCostPerCycle =
-    (DLI * alpha * T) / (3.6 * PPE) * C_elec;
-  return (revenuePerCycle - energyCostPerCycle) / T;
+  return (calcRevenue(DLI, Y_max, k, P_crop) - calcEnergyCost(DLI, T, PPE, alpha, C_elec)) / T;
 }
 
 function generateCurves(params) {
   const { Y_max, k, T, P_crop, PPE, alpha, C_elec } = params;
   const mproiData = [];
-  const profitData = [];
+  const revenueData = [];
+  const energyCostData = [];
 
   for (let i = 0; i <= DLI_PLOT_STEPS; i++) {
     const dli = DLI_MIN + (i / DLI_PLOT_STEPS) * (DLI_MAX - DLI_MIN);
@@ -38,14 +44,18 @@ function generateCurves(params) {
       x: dli,
       y: calcMPROI(dli, Y_max, k, T, P_crop, PPE, alpha, C_elec),
     });
-    profitData.push({
+    revenueData.push({
       x: dli,
-      y: calcProfitPerDay(dli, Y_max, k, T, P_crop, PPE, alpha, C_elec),
+      y: calcRevenue(dli, Y_max, k, P_crop),
+    });
+    energyCostData.push({
+      x: dli,
+      y: calcEnergyCost(dli, T, PPE, alpha, C_elec),
     });
   }
 
   const dliOpt = calcDLIOptimal(Y_max, k, T, P_crop, PPE, alpha, C_elec);
   const inRange = dliOpt !== null && dliOpt >= DLI_MIN && dliOpt <= DLI_MAX;
 
-  return { mproiData, profitData, dliOpt, dliOptInRange: inRange };
+  return { mproiData, revenueData, energyCostData, dliOpt, dliOptInRange: inRange };
 }

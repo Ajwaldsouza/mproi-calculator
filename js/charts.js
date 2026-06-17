@@ -1,3 +1,8 @@
+const REVENUE_COLOR = "#3a8a5c";
+const COST_COLOR = "#b85450";
+const REVENUE_FILL = "rgba(58, 138, 92, 0.12)";
+const COST_FILL = "rgba(196, 80, 80, 0.12)";
+
 function createScenarioChart(canvas) {
   return new Chart(canvas, {
     type: "line",
@@ -14,15 +19,31 @@ function createScenarioChart(canvas) {
           order: 1,
         },
         {
-          label: "Profit",
+          label: "Revenue",
           data: [],
-          borderColor: "#999",
-          borderWidth: 1.4,
+          borderColor: REVENUE_COLOR,
+          borderWidth: 1.6,
           borderDash: [6, 3],
           pointRadius: 0,
           tension: 0.3,
-          yAxisID: "yProfit",
+          yAxisID: "yRight",
           order: 2,
+          fill: {
+            target: "+1",
+            above: REVENUE_FILL,
+            below: COST_FILL,
+          },
+        },
+        {
+          label: "Energy Cost",
+          data: [],
+          borderColor: COST_COLOR,
+          borderWidth: 1.6,
+          borderDash: [6, 3],
+          pointRadius: 0,
+          tension: 0.3,
+          yAxisID: "yRight",
+          order: 3,
         },
       ],
     },
@@ -32,6 +53,7 @@ function createScenarioChart(canvas) {
       interaction: { mode: "index", intersect: false },
       plugins: {
         legend: { display: false },
+        filler: {},
         tooltip: {
           backgroundColor: "rgba(255,255,255,0.95)",
           titleColor: "#1a1a1a",
@@ -47,7 +69,9 @@ function createScenarioChart(canvas) {
             label: (ctx) => {
               if (ctx.datasetIndex === 0)
                 return ` MPROI: ${ctx.parsed.y.toFixed(2)}`;
-              return ` Profit: $${ctx.parsed.y.toFixed(3)}/m²/d`;
+              if (ctx.datasetIndex === 1)
+                return ` Revenue: $${ctx.parsed.y.toFixed(2)}/m²/cycle`;
+              return ` Energy Cost: $${ctx.parsed.y.toFixed(2)}/m²/cycle`;
             },
           },
         },
@@ -94,12 +118,13 @@ function createScenarioChart(canvas) {
             callback: (v) => v.toFixed(1),
           },
         },
-        yProfit: {
+        yRight: {
           type: "linear",
           position: "right",
+          min: 0,
           title: {
             display: true,
-            text: "Profit ($/m²/d)",
+            text: "$ m⁻² cycle⁻¹",
             font: {
               family: "system-ui, sans-serif",
               size: 10,
@@ -112,7 +137,7 @@ function createScenarioChart(canvas) {
           ticks: {
             font: { size: 9 },
             color: "#aaa",
-            callback: (v) => "$" + v.toFixed(2),
+            callback: (v) => "$" + v.toFixed(0),
           },
         },
       },
@@ -121,22 +146,23 @@ function createScenarioChart(canvas) {
 }
 
 function updateChart(chart, curves, cropColor, currentDLI) {
-  const { mproiData, profitData, dliOpt, dliOptInRange } = curves;
+  const { mproiData, revenueData, energyCostData, dliOpt, dliOptInRange } = curves;
 
   chart.data.datasets[0].data = mproiData;
   chart.data.datasets[0].borderColor = cropColor;
-  chart.data.datasets[1].data = profitData;
+  chart.data.datasets[1].data = revenueData;
+  chart.data.datasets[2].data = energyCostData;
 
   const maxMPROI = Math.max(...mproiData.map((d) => d.y));
   chart.options.scales.yMPROI.max =
     Math.ceil(Math.max(maxMPROI, 1.5) * 1.15 * 10) / 10;
 
-  const profitValues = profitData.map((d) => d.y);
-  const minP = Math.min(...profitValues);
-  const maxP = Math.max(...profitValues);
-  const pPad = (maxP - minP) * 0.15 || 0.01;
-  chart.options.scales.yProfit.min = Math.floor((minP - pPad) * 100) / 100;
-  chart.options.scales.yProfit.max = Math.ceil((maxP + pPad) * 100) / 100;
+  const allRightValues = [
+    ...revenueData.map((d) => d.y),
+    ...energyCostData.map((d) => d.y),
+  ];
+  const maxR = Math.max(...allRightValues);
+  chart.options.scales.yRight.max = Math.ceil(maxR * 1.15 * 10) / 10;
 
   const annotations = {};
 
@@ -165,7 +191,6 @@ function updateChart(chart, curves, cropColor, currentDLI) {
       type: "line",
       xMin: dliOpt,
       xMax: dliOpt,
-      yScaleID: "yMPROI",
       borderColor: cropColor,
       borderWidth: 1.5,
       borderDash: [4, 3],
@@ -194,7 +219,6 @@ function updateChart(chart, curves, cropColor, currentDLI) {
     type: "line",
     xMin: currentDLI,
     xMax: currentDLI,
-    yScaleID: "yMPROI",
     borderColor: "#555",
     borderWidth: 1.5,
     label: {
