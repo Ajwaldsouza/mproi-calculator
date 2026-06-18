@@ -1,29 +1,9 @@
-function calcMPROI(DLI, Y_max, k, T, P_crop, PPE, COP, C_elec) {
-  const numerator = Y_max * (1 - Math.exp(-k * DLI)) * P_crop * 3.6 * COP;
-  const beta = (COP + 1) / PPE - 1 / K_SPECTRUM;
-  const denominator = DLI * T * C_elec * beta;
-  return numerator / denominator;
+function calcYield(DLI, a, b, c) {
+  return a * DLI * DLI + b * DLI + c;
 }
 
-function calcDLIOptimal(Y_max, k, T, P_crop, PPE, COP, C_elec) {
-  const beta = (COP + 1) / PPE - 1 / K_SPECTRUM;
-  const target = (T * C_elec * beta) / (Y_max * P_crop * 3.6 * COP);
-  if (target >= k) return null;
-  let lo = 0.001, hi = 500;
-  for (let i = 0; i < 60; i++) {
-    const mid = (lo + hi) / 2;
-    if ((1 - Math.exp(-k * mid)) / mid > target) lo = mid;
-    else hi = mid;
-  }
-  return (lo + hi) / 2;
-}
-
-function calcYield(DLI, Y_max, k) {
-  return Y_max * (1 - Math.exp(-k * DLI));
-}
-
-function calcRevenue(DLI, Y_max, k, P_crop) {
-  return calcYield(DLI, Y_max, k) * P_crop;
+function calcRevenue(DLI, a, b, c, P_crop) {
+  return calcYield(DLI, a, b, c) * P_crop;
 }
 
 function calcEnergyCost(DLI, T, PPE, COP, C_elec) {
@@ -31,12 +11,33 @@ function calcEnergyCost(DLI, T, PPE, COP, C_elec) {
   return (DLI * T) / (3.6 * COP) * beta * C_elec;
 }
 
-function calcProfitPerDay(DLI, Y_max, k, T, P_crop, PPE, COP, C_elec) {
-  return (calcRevenue(DLI, Y_max, k, P_crop) - calcEnergyCost(DLI, T, PPE, COP, C_elec)) / T;
+function calcMPROI(DLI, a, b, c, T, P_crop, PPE, COP, C_elec) {
+  const revenue = calcRevenue(DLI, a, b, c, P_crop);
+  const cost = calcEnergyCost(DLI, T, PPE, COP, C_elec);
+  if (cost === 0) return Infinity;
+  return revenue / cost;
+}
+
+function calcDLIOptimal(a, b, c, T, P_crop, PPE, COP, C_elec) {
+  const beta = (COP + 1) / PPE - 1 / K_SPECTRUM;
+  const gamma = (T * C_elec * beta) / (P_crop * 3.6 * COP);
+  const B = b - gamma;
+  const discriminant = B * B - 4 * a * c;
+  if (discriminant < 0) return null;
+  const sqrtD = Math.sqrt(discriminant);
+  const root1 = (-B + sqrtD) / (2 * a);
+  const root2 = (-B - sqrtD) / (2 * a);
+  const dliOpt = Math.max(root1, root2);
+  if (dliOpt <= 0) return null;
+  return dliOpt;
+}
+
+function calcProfitPerDay(DLI, a, b, c, T, P_crop, PPE, COP, C_elec) {
+  return (calcRevenue(DLI, a, b, c, P_crop) - calcEnergyCost(DLI, T, PPE, COP, C_elec)) / T;
 }
 
 function generateCurves(params) {
-  const { Y_max, k, T, P_crop, PPE, COP, C_elec } = params;
+  const { a, b, c, T, P_crop, PPE, COP, C_elec } = params;
   const mproiData = [];
   const revenueData = [];
   const energyCostData = [];
@@ -45,11 +46,11 @@ function generateCurves(params) {
     const dli = DLI_MIN + (i / DLI_PLOT_STEPS) * (DLI_MAX - DLI_MIN);
     mproiData.push({
       x: dli,
-      y: calcMPROI(dli, Y_max, k, T, P_crop, PPE, COP, C_elec),
+      y: calcMPROI(dli, a, b, c, T, P_crop, PPE, COP, C_elec),
     });
     revenueData.push({
       x: dli,
-      y: calcRevenue(dli, Y_max, k, P_crop),
+      y: calcRevenue(dli, a, b, c, P_crop),
     });
     energyCostData.push({
       x: dli,
@@ -57,7 +58,7 @@ function generateCurves(params) {
     });
   }
 
-  const dliOpt = calcDLIOptimal(Y_max, k, T, P_crop, PPE, COP, C_elec);
+  const dliOpt = calcDLIOptimal(a, b, c, T, P_crop, PPE, COP, C_elec);
   const inRange = dliOpt !== null && dliOpt >= DLI_MIN && dliOpt <= DLI_MAX;
 
   return { mproiData, revenueData, energyCostData, dliOpt, dliOptInRange: inRange };

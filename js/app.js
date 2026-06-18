@@ -12,8 +12,9 @@ function getParams(index) {
   const loc = LOCATIONS[locKey];
 
   return {
-    Y_max: crop.Y_max,
-    k: crop.k,
+    a: crop.a,
+    b: crop.b,
+    c: crop.c,
     T: crop.T,
     P_crop: P_crop,
     PPE: PPE,
@@ -37,23 +38,15 @@ function updateSummary(index, params, curves) {
   const { dliOpt, dliOptInRange } = curves;
   const mproiAtCurrent = calcMPROI(
     params.currentDLI,
-    params.Y_max,
-    params.k,
-    params.T,
-    params.P_crop,
-    params.PPE,
-    params.COP,
-    params.C_elec
+    params.a, params.b, params.c,
+    params.T, params.P_crop,
+    params.PPE, params.COP, params.C_elec
   );
   const profitAtCurrent = calcProfitPerDay(
     params.currentDLI,
-    params.Y_max,
-    params.k,
-    params.T,
-    params.P_crop,
-    params.PPE,
-    params.COP,
-    params.C_elec
+    params.a, params.b, params.c,
+    params.T, params.P_crop,
+    params.PPE, params.COP, params.C_elec
   );
 
   const mproiClass = mproiAtCurrent >= 1 ? "value-positive" : "value-negative";
@@ -72,13 +65,9 @@ function updateSummary(index, params, curves) {
     if (gap > 0.5) {
       const profitAtOpt = calcProfitPerDay(
         dliOpt,
-        params.Y_max,
-        params.k,
-        params.T,
-        params.P_crop,
-        params.PPE,
-        params.COP,
-        params.C_elec
+        params.a, params.b, params.c,
+        params.T, params.P_crop,
+        params.PPE, params.COP, params.C_elec
       );
       const annualImpact = (profitAtOpt - profitAtCurrent) * 365;
       gapText = `<p class="gap-warning">Operating <strong>${gap.toFixed(1)} mol above</strong> optimal. Estimated margin loss: <strong>$${annualImpact.toFixed(2)}/m²/year</strong></p>`;
