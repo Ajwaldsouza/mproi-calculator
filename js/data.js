@@ -29,10 +29,12 @@ const CROPS = {
 };
 
 const LOCATIONS = {
-  netherlands: { name: "Netherlands", C_elec: 0.200, alpha: 1.933 },
-  sweden: { name: "Sweden", C_elec: 0.120, alpha: 1.950 },
-  uae: { name: "UAE", C_elec: 0.080, alpha: 1.864 },
+  netherlands: { name: "Netherlands", C_elec: 0.200, COP: 7.5 },
+  sweden: { name: "Sweden", C_elec: 0.120, COP: 10 },
+  uae: { name: "UAE", C_elec: 0.080, COP: 3.7 },
 };
+
+const K_SPECTRUM = 4.556;
 
 const DLI_MIN = 4;
 const DLI_MAX = 24;

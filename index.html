@@ -12,7 +12,7 @@
     <h1>Marginal Photon ROI Calculator</h1>
     <p class="subtitle">Find the DLI where the last unit of light stops paying for itself</p>
     <div class="formula-ref">
-      MPROI&nbsp;=&nbsp;(3.6 &times; PPE &times; Y<sub>max</sub> &times; (1 &minus; e<sup>&minus;k&middot;DLI</sup>) &times; P<sub>crop</sub>)&nbsp;/&nbsp;(DLI &times; &alpha; &times; T &times; C<sub>elec</sub>)
+      MPROI&nbsp;=&nbsp;(3.6 &times; COP &times; Y<sub>max</sub> &times; (1 &minus; e<sup>&minus;k&middot;DLI</sup>) &times; P<sub>crop</sub>)&nbsp;/&nbsp;(DLI &times; T &times; C<sub>elec</sub> &times; ((COP+1)/PPE &minus; 1/K))
     </div>
   </header>
 
@@ -209,7 +209,7 @@
     </button>
     <div class="methodology-content">
       <p><strong>Yield model:</strong> Y(DLI) = Y<sub>max</sub> &times; (1 &minus; e<sup>&minus;k&middot;DLI</sup>). Parameters fitted from published yield-DLI data (Pennisi et al., 2020) using nonlinear least squares.</p>
-      <p><strong>Energy model:</strong> Total energy per mol DLI = lighting + HVAC cooling. HVAC multiplier (&alpha;) calculated as 1 + (1 &minus; &eta;<sub>LED</sub>) / COP, using COP values from Graamans et al. (2018) for each climate zone.</p>
+      <p><strong>Energy model:</strong> Total energy per mol DLI = lighting + HVAC cooling. LED wall-plug efficiency (&eta;<sub>LED</sub>) derived from PPE via the spectral conversion factor K = 4.556 &micro;mol/J<sub>opt</sub> (50/50 blue-red spectrum). COP values from Graamans et al. (2018) for each climate zone.</p>
       <p><strong>Profit:</strong> Revenue (yield &times; selling price) minus energy cost (lighting + cooling) per crop cycle, expressed per m&sup2; per day. Variable costs (seeds, nutrients, labour) are excluded — the metric isolates the light&ndash;energy decision.</p>
       <p><strong>Limitations:</strong> Does not model cycle-time effects on annual throughput, time-of-use electricity tariffs, CO&sub2; supplementation interactions, or tip-burn / quality losses at high DLI.</p>
     </div>

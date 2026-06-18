@@ -17,7 +17,7 @@ function getParams(index) {
     T: crop.T,
     P_crop: P_crop,
     PPE: PPE,
-    alpha: loc.alpha,
+    COP: loc.COP,
     C_elec: loc.C_elec,
     cropKey: cropKey,
     currentDLI: currentDLI,
@@ -42,7 +42,7 @@ function updateSummary(index, params, curves) {
     params.T,
     params.P_crop,
     params.PPE,
-    params.alpha,
+    params.COP,
     params.C_elec
   );
   const profitAtCurrent = calcProfitPerDay(
@@ -52,7 +52,7 @@ function updateSummary(index, params, curves) {
     params.T,
     params.P_crop,
     params.PPE,
-    params.alpha,
+    params.COP,
     params.C_elec
   );
 
@@ -77,7 +77,7 @@ function updateSummary(index, params, curves) {
         params.T,
         params.P_crop,
         params.PPE,
-        params.alpha,
+        params.COP,
         params.C_elec
       );
       const annualImpact = (profitAtOpt - profitAtCurrent) * 365;
