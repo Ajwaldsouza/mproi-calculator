@@ -46,7 +46,9 @@ body {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2.4rem 1.5rem 1.2rem;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .site-header h1 {
@@ -63,18 +65,14 @@ body {
   margin-top: 0.3rem;
 }
 
-.site-header .formula-ref {
-  display: inline-block;
-  margin-top: 0.8rem;
-  padding: 0.5rem 1rem;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+.brand {
   font-family: var(--font-serif);
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   font-style: italic;
-  color: var(--text-secondary);
-  letter-spacing: 0.01em;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  padding-top: 0.3rem;
 }
 
 /* ── Scenarios Grid ──────────────────── */
@@ -451,45 +449,29 @@ input[type="range"]::-moz-range-thumb {
   text-align: center;
 }
 
-.methodology-toggle {
-  background: none;
-  border: none;
-  font-family: var(--font-sans);
-  font-size: 0.78rem;
+.footer-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  font-size: 0.8rem;
   color: var(--text-muted);
-  cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 2px;
+  transition: color 0.15s;
 }
 
-.methodology-toggle:hover {
+.footer-link:hover {
   color: var(--text-secondary);
 }
 
-.methodology-content {
-  display: none;
-  text-align: left;
-  max-width: 680px;
-  margin: 0.8rem auto 0;
-  padding: 1rem 1.2rem;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-.methodology-content.open {
-  display: block;
-}
-
-.methodology-content p + p {
-  margin-top: 0.5rem;
-}
-
-.methodology-content strong {
-  color: var(--text);
+.footer-sep {
+  color: var(--border);
+  font-size: 0.8rem;
 }
 
 /* ── Responsive ──────────────────────── */
@@ -507,10 +489,15 @@ input[type="range"]::-moz-range-thumb {
 
   .site-header {
     padding: 1.5rem 1rem 0.8rem;
+    flex-wrap: wrap;
   }
 
   .site-header h1 {
     font-size: 1.4rem;
+  }
+
+  .brand {
+    font-size: 0.78rem;
   }
 
   .scenarios-grid {
